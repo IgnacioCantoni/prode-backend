@@ -11,9 +11,22 @@ const app = express();
 const port = process.env.PORT || 3000;
 
 // ✅ CORS: permite cookies desde el frontend (reemplazá la URL por la tuya)
+const allowedOrigins = [
+  'http://localhost:4200', 
+  process.env.FRONTEND_URL // ¡Que se aseguren de que en Railway esta URL NO tenga una barra al final!
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:4200',
-  credentials: true,  // necesario para que Angular pueda enviar/recibir cookies
+  origin: function (origin, callback) {
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('No permitido por CORS'));
+    }
+  },
+  credentials: true // ESTO ES VITAL PARA LAS COOKIES
 }));
 
 app.use(express.json());
