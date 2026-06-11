@@ -1,0 +1,260 @@
+// ── Variables ─────────────────────────────────────────────────
+$accent:  #74ACDF;
+$border:  rgba(255,255,255,0.08);
+$tp:      #F0F2F8;
+$ts:      #8A90A8;
+$r-full:  100px;
+$r-sm:    8px;
+
+// ── Shell ─────────────────────────────────────────────────────
+.nb {
+  position: sticky;
+  top: 0;
+  z-index: 200;
+  height: 60px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(13,15,20,0.65);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 1px solid $border;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(116,172,223,0.3), transparent);
+    pointer-events: none;
+  }
+}
+
+// ── Logo ──────────────────────────────────────────────────────
+.nb-brand {
+  display: flex; align-items: center; gap: 9px;
+  text-decoration: none; flex-shrink: 0;
+}
+
+.nb-logo {
+  width: 34px; height: 34px; border-radius: 9px; overflow: hidden;
+  display: flex; align-items: center; justify-content: center;
+}
+
+.nb-logo-img   { width: 100%; height: 100%; object-fit: contain; }
+.nb-brand-text { display: flex; flex-direction: column; line-height: 1; gap: 1px; }
+.nb-name       { font-size: 15px; font-weight: 800; color: $tp; letter-spacing: -0.03em; }
+.nb-sub        { font-size: 9px; font-weight: 600; color: $accent; text-transform: uppercase; letter-spacing: 0.1em; }
+
+// ── Pill wrapper centrado ──────────────────────────────────────
+.nb-pill-wrap {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 768px) { display: none; }
+}
+
+.nb-pill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $border;
+  border-radius: $r-full;
+  padding: 4px;
+}
+
+// ── Tubelight ─────────────────────────────────────────────────
+.nb-tube {
+  position: absolute;
+  top: 0; bottom: 0;
+  border-radius: $r-full;
+  background: rgba(116,172,223,0.10);
+  border: 1px solid rgba(116,172,223,0.20);
+  pointer-events: none;
+  transition:
+    left  0.35s cubic-bezier(0.34,1.2,0.64,1),
+    width 0.35s cubic-bezier(0.34,1.2,0.64,1);
+}
+
+.nb-tube-bar {
+  position: absolute;
+  top: -1px; left: 20%; right: 20%;
+  height: 2px;
+  border-radius: 0 0 3px 3px;
+  background: $accent;
+  box-shadow:
+    0 0  5px 1px rgba(116,172,223,0.95),
+    0 0 12px 3px rgba(116,172,223,0.55),
+    0 0 25px 6px rgba(116,172,223,0.25);
+}
+
+.nb-tube-glow {
+  position: absolute;
+  left: 50%; transform: translateX(-50%);
+  border-radius: 50%;
+  background: rgba(116,172,223,0.18);
+  filter: blur(8px);
+  &--1 { top: -6px; width: 60%;  height: 20px; }
+  &--2 { top: -2px; width: 40%;  height: 14px; filter: blur(5px); background: rgba(116,172,223,0.25); }
+  &--3 { top:  0px; width: 25%;  height: 10px; filter: blur(3px); background: rgba(116,172,223,0.35); }
+}
+
+// ── Nav items ─────────────────────────────────────────────────
+.nb-item {
+  position: relative; z-index: 1;
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: $r-full;
+  font-size: 13px; font-weight: 500; color: $ts;
+  text-decoration: none; white-space: nowrap; transition: color 0.2s;
+
+  .nb-icon  { font-size: 14px; line-height: 1; }
+  &:hover   { color: $tp; }
+
+  &--active {
+    color: $accent; font-weight: 600;
+    .nb-icon { filter: drop-shadow(0 0 4px rgba(116,172,223,0.7)); }
+  }
+
+  &--solid {
+    background: $accent;
+    color: #0d0f14;
+    font-weight: 700;
+    &:hover { background: lighten($accent, 8%); color: #0d0f14; }
+  }
+}
+
+// ── Auth wrap ─────────────────────────────────────────────────
+.nb-auth-wrap {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  @media (max-width: 768px) { display: none; }
+}
+
+// ── Usuario logueado ──────────────────────────────────────────
+.nb-user {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $border;
+  border-radius: $r-full;
+  padding: 4px 12px 4px 4px;
+}
+
+.nb-user-avatar {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $accent, #4a8cbf);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700; color: #0d0f14;
+  flex-shrink: 0;
+}
+
+.nb-user-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $tp;
+  max-width: 120px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nb-btn-logout {
+  background: rgba(255,107,107,0.1);
+  border: 1px solid rgba(255,107,107,0.25);
+  border-radius: $r-full;
+  color: #FF6B6B;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  white-space: nowrap;
+
+  &:hover {
+    background: rgba(255,107,107,0.2);
+    border-color: rgba(255,107,107,0.4);
+  }
+}
+
+// ── Hamburger ─────────────────────────────────────────────────
+.nb-burger {
+  display: none;
+  flex-direction: column; gap: 5px;
+  width: 34px; height: 34px;
+  background: transparent; border: 1px solid $border;
+  border-radius: $r-sm; cursor: pointer; padding: 8px; margin-left: auto;
+
+  span {
+    display: block; height: 1.5px; background: $ts;
+    border-radius: 2px; transition: all 0.25s; transform-origin: center;
+  }
+
+  &--open span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  &--open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+  &--open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  @media (max-width: 768px) { display: flex; }
+}
+
+// ── Mobile menu ───────────────────────────────────────────────
+.nb-mobile {
+  position: absolute;
+  top: 60px; left: 0; right: 0;
+  background: rgba(10,12,18,0.97);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid $border;
+  display: flex; flex-direction: column;
+  padding: 10px; gap: 3px; z-index: 199;
+  animation: nb-slide 0.2s cubic-bezier(0.4,0,0.2,1);
+}
+
+@keyframes nb-slide {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.nb-mobile-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: $ts;
+  text-decoration: none; transition: all 0.15s;
+  &:hover { background: rgba(255,255,255,0.04); color: $tp; }
+  &--active {
+    background: rgba(116,172,223,0.1); color: $accent; font-weight: 600;
+    border-left: 2px solid $accent; padding-left: 12px;
+  }
+}
+
+.nb-mobile-auth {
+  display: flex; flex-direction: column; gap: 8px;
+  padding: 10px 4px 4px; border-top: 1px solid $border; margin-top: 4px;
+}
+
+.nb-mobile-user {
+  display: flex; align-items: center; gap: 10px;
+  padding: 8px 10px;
+  font-size: 14px; font-weight: 600; color: $tp;
+}
+
+.nb-btn-login {
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px 16px; border-radius: $r-full;
+  font-size: 13px; font-weight: 500; color: $ts;
+  text-decoration: none; transition: color 0.2s;
+  &:hover { color: $tp; }
+}
+
+.nb-btn-reg {
+  display: flex; align-items: center; justify-content: center;
+  padding: 10px 16px; border-radius: $r-full;
+  font-size: 13px; font-weight: 600; color: #0d0f14;
+  text-decoration: none; background: $accent;
+  transition: background 0.2s;
+  &:hover { background: lighten($accent, 8%); }
+}

@@ -1,0 +1,162 @@
+<div class="ranking-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title">Ranking General</h1>
+      <span class="page-sub">{{ players.length }} jugadores · Mundial 2026</span>
+    </div>
+    <div class="header-badge">
+      <span class="badge-dot"></span>
+      <span>En vivo</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <span class="loading-spinner">🏆</span>
+      <span>Cargando ranking...</span>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error) {
+    <div class="error-state">⚠️ {{ error }}</div>
+  }
+
+  @if (!loading && players.length >= 3) {
+    <!-- Podium Top 3 -->
+    <div class="podium-section">
+      <!-- 2do -->
+      <div class="podium-card second">
+        <div class="podium-medal">🥈</div>
+        <div class="podium-avatar" [style.background]="top3[1].color">{{ top3[1].initials }}</div>
+        <div class="podium-name">{{ top3[1].name }}</div>
+        <div class="podium-points">{{ top3[1].points }} pts</div>
+        <div class="podium-base second-base">2°</div>
+      </div>
+
+      <!-- 1ro -->
+      <div class="podium-card first">
+        <div class="podium-crown">👑</div>
+        <div class="podium-medal">🥇</div>
+        <div class="podium-avatar large" [style.background]="top3[0].color">{{ top3[0].initials }}</div>
+        <div class="podium-name">{{ top3[0].name }}</div>
+        <div class="podium-points gold">{{ top3[0].points }} pts</div>
+        <div class="podium-base first-base">1°</div>
+      </div>
+
+      <!-- 3ro -->
+      <div class="podium-card third">
+        <div class="podium-medal">🥉</div>
+        <div class="podium-avatar" [style.background]="top3[2].color">{{ top3[2].initials }}</div>
+        <div class="podium-name">{{ top3[2].name }}</div>
+        <div class="podium-points">{{ top3[2].points }} pts</div>
+        <div class="podium-base third-base">3°</div>
+      </div>
+    </div>
+
+    <!-- Mi posición destacada -->
+    @if (myPlayer) {
+      <div class="my-position-banner">
+        <div class="my-pos-left">
+          <span class="my-pos-label">Tu posición</span>
+          <div class="my-pos-info">
+            <div class="my-avatar" [style.background]="myPlayer.color">{{ myPlayer.initials }}</div>
+            <span class="my-name">{{ myPlayer.name }}</span>
+          </div>
+        </div>
+        <div class="my-pos-stats">
+          <div class="my-stat">
+            <span class="my-stat-val">#{{ myPlayer.position }}</span>
+            <span class="my-stat-lbl">Posición</span>
+          </div>
+          <div class="my-stat">
+            <span class="my-stat-val accent">{{ myPlayer.points }}</span>
+            <span class="my-stat-lbl">Puntos</span>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Table Section -->
+    <div class="table-section">
+      <div class="table-toolbar">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input
+            type="text"
+            placeholder="Buscar jugador..."
+            class="search-input"
+            [value]="searchQuery"
+            (input)="onSearch($event)"
+          />
+        </div>
+        <span class="table-count">{{ filteredPlayers.length }} jugadores</span>
+      </div>
+
+      <div class="table-header">
+        <span class="col-pos">#</span>
+        <span class="col-player">Jugador</span>
+        <span class="col-pts">Puntos</span>
+        <span class="col-exact">Exactos</span>
+        <span class="col-correct">Resultados</span>
+        <span class="col-acc">Precisión</span>
+      </div>
+
+      <div class="table-body">
+        @for (player of filteredPlayers; track player.position) {
+          <div class="table-row" [class.is-me]="player.isMe" [class.top3]="player.position <= 3">
+
+            <div class="col-pos">
+              @if (player.position <= 3) {
+                <span class="medal">{{ getMedalIcon(player.position) }}</span>
+              } @else {
+                <span class="position-num" [class.is-me]="player.isMe">{{ player.position }}</span>
+              }
+            </div>
+
+            <div class="col-player">
+              <div class="player-avatar" [style.background]="player.color">{{ player.initials }}</div>
+              <div class="player-info">
+                <span class="player-name" [class.is-me]="player.isMe">{{ player.name }}</span>
+                @if (player.isMe) { <span class="you-badge">Vos</span> }
+              </div>
+            </div>
+
+            <div class="col-pts">
+              <span class="points-value" [class.is-me]="player.isMe">{{ player.points }}</span>
+            </div>
+
+            <div class="col-exact">
+              <span class="exact-value">{{ player.exactScores }}</span>
+            </div>
+
+            <div class="col-correct">
+              <span class="correct-value">{{ player.correctResults }}</span>
+            </div>
+
+            <div class="col-acc">
+              <div class="accuracy-wrap">
+                <span class="accuracy-pct">{{ getAccuracy(player) }}%</span>
+                <div class="accuracy-bar">
+                  <div class="accuracy-fill" [style.width.%]="getAccuracy(player)"></div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  @if (!loading && players.length === 0 && !error) {
+    <div class="empty-state">
+      <span>📊</span>
+      <p>Todavía no hay predicciones cargadas.</p>
+    </div>
+  }
+
+</div>

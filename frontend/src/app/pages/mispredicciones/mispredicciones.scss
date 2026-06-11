@@ -1,0 +1,789 @@
+// ─── Variables ───────────────────────────────────────────────
+$bg-base:       #0d0f14;
+$bg-surface:    #13161e;
+$bg-card:       #1a1d28;
+$bg-card-hover: #1f2335;
+$border:        rgba(255, 255, 255, 0.07);
+$border-light:  rgba(255, 255, 255, 0.12);
+
+$accent:        #74ACDF;
+$accent-glow:   rgba(116, 172, 223, 0.12);
+$gold:          #F6B40E;
+$green:         #3DDC84;
+$green-bg:      rgba(61, 220, 132, 0.1);
+$yellow:        #FFD166;
+$yellow-bg:     rgba(255, 209, 102, 0.1);
+$red:           #FF6B6B;
+$red-bg:        rgba(255, 107, 107, 0.1);
+
+$text-primary:  #F0F2F8;
+$text-secondary:#8A90A8;
+$text-muted:    #4A5068;
+
+$radius-sm:     8px;
+$radius-md:     12px;
+$radius-lg:     16px;
+$radius-xl:     20px;
+
+// ─── Container ────────────────────────────────────────────────
+.predicciones-container {
+  background: transparent; // ← era $bg-base, deja ver la galaxia
+  min-height: 100vh;
+  color: $text-primary;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  padding-bottom: 3rem;
+}
+
+// ─── Page Header ──────────────────────────────────────────────
+.page-header {
+  background: rgba(19, 22, 30, 0.6); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid $border;
+  padding: 20px 24px;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $accent, transparent);
+  }
+}
+
+.page-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 4px;
+  letter-spacing: -0.02em;
+}
+
+.page-sub {
+  font-size: 12px;
+  color: $text-muted;
+}
+
+// ─── Stats Row ────────────────────────────────────────────────
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid $border;
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.stat-card {
+  background: rgba(19, 22, 30, 0.6); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-right: 1px solid $border;
+  transition: background 0.2s;
+
+  &:last-child { border-right: none; }
+  &:hover { background: rgba(26, 29, 40, 0.75); } // ← era $bg-card sólido
+
+  &.accent {
+    background: rgba(116, 172, 223, 0.05);
+    .stat-value { color: $accent; }
+  }
+}
+
+.stat-icon { font-size: 18px; line-height: 1; }
+
+.stat-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: $text-primary;
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: $text-secondary;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+// ─── Tabs ─────────────────────────────────────────────────────
+.tabs-bar {
+  display: flex;
+  gap: 4px;
+  padding: 12px 24px;
+  background: rgba(19, 22, 30, 0.6); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid $border;
+}
+
+.tab-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 8px 16px;
+  border-radius: $radius-md;
+  border: 1px solid transparent;
+  background: transparent;
+  color: $text-secondary;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(26, 29, 40, 0.7); // ← era $bg-card sólido
+    color: $text-primary;
+  }
+
+  &.active {
+    background: $accent-glow;
+    border-color: rgba(116, 172, 223, 0.2);
+    color: $accent;
+    font-weight: 600;
+  }
+}
+
+.tab-badge {
+  background: rgba(255, 255, 255, 0.08);
+  color: $text-muted;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 1px 7px;
+  border-radius: 100px;
+
+  .active & {
+    background: rgba(116, 172, 223, 0.15);
+    color: $accent;
+  }
+}
+
+// ─── Tab Content ──────────────────────────────────────────────
+.tab-content {
+  padding: 20px 24px;
+}
+
+.section-hint {
+  font-size: 13px;
+  color: $text-muted;
+  margin-bottom: 16px;
+}
+
+// ─── Shared team display ──────────────────────────────────────
+.p-flag { font-size: 18px; line-height: 1; }
+
+.p-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.p-vs {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+.meta-group {
+  font-size: 11px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.meta-dot { color: $text-muted; font-size: 10px; }
+
+.meta-date {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+// ─── Prediction badge ─────────────────────────────────────────
+.pred-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+
+  &.exact   { background: $green-bg;  color: $green;  border: 1px solid rgba(61,220,132,.25); }
+  &.correct { background: $yellow-bg; color: $yellow; border: 1px solid rgba(255,209,102,.25); }
+  &.miss    { background: $red-bg;    color: $red;    border: 1px solid rgba(255,107,107,.2); }
+  &.pending { background: $accent-glow; color: $accent; border: 1px solid rgba(116,172,223,.2); }
+}
+
+// ─── Pendientes ───────────────────────────────────────────────
+.pending-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pending-card {
+  background: rgba(19, 22, 30, 0.65); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(26, 29, 40, 0.8); // ← era $bg-card sólido
+    border-color: $border-light;
+  }
+}
+
+.pending-left {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.pending-teams {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pending-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pending-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.deadline-badge {
+  font-size: 11px;
+  color: $text-muted;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid $border;
+  border-radius: 100px;
+  padding: 3px 10px;
+  white-space: nowrap;
+
+  &.urgent {
+    color: $gold;
+    background: rgba(246,180,14,0.08);
+    border-color: rgba(246,180,14,0.25);
+  }
+}
+
+.predict-btn {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d0f14;
+  background: $accent;
+  border: none;
+  border-radius: $radius-sm;
+  padding: 7px 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+
+  &:hover { background: lighten($accent, 8%); }
+}
+
+// ─── Historial ────────────────────────────────────────────────
+.historial-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.historial-card {
+  background: rgba(19, 22, 30, 0.65); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(26, 29, 40, 0.8); } // ← era $bg-card sólido
+}
+
+.hist-left {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  flex: 1;
+}
+
+.hist-status-bar {
+  width: 3px;
+  height: 40px;
+  border-radius: 4px;
+  margin-right: 14px;
+  flex-shrink: 0;
+
+  &.exact   { background: $green; }
+  &.correct { background: $yellow; }
+  &.miss    { background: $red; }
+}
+
+.hist-info {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.hist-teams {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.hist-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hist-scores {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-left: auto;
+}
+
+.score-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+}
+
+.score-label {
+  font-size: 10px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.score-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: $text-primary;
+
+  &.real { color: $accent; }
+}
+
+.score-divider {
+  width: 1px;
+  height: 32px;
+  background: $border;
+}
+
+.hist-points {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.exact   { background: $green-bg;  color: $green;  border: 1px solid rgba(61,220,132,.25); }
+  &.correct { background: $yellow-bg; color: $yellow; border: 1px solid rgba(255,209,102,.25); }
+  &.miss    { background: $red-bg;    color: $red;    border: 1px solid rgba(255,107,107,.2); }
+}
+
+// ─── Amigos ───────────────────────────────────────────────────
+.friends-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.friend-match-card {
+  background: rgba(19, 22, 30, 0.65); // ← era $bg-surface sólido
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $border;
+  border-radius: $radius-xl;
+  overflow: hidden;
+}
+
+.fm-header {
+  background: rgba(26, 29, 40, 0.7); // ← era $bg-card sólido
+  border-bottom: 1px solid $border;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.fm-teams {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.fm-team {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.fm-result {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid $border;
+  border-radius: $radius-sm;
+  padding: 4px 12px;
+}
+
+.fm-score {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+.fm-result-label {
+  font-size: 9px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fm-date {
+  font-size: 11px;
+  color: $text-muted;
+  white-space: nowrap;
+}
+
+// Mi predicción row
+.my-prediction-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-bottom: 1px solid $border;
+  background: rgba(116, 172, 223, 0.03);
+}
+
+.my-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $accent, darken($accent, 15%));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 2px rgba(116,172,223,0.25);
+}
+
+.my-pred-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.my-pred-name {
+  font-size: 11px;
+  color: $text-muted;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+}
+
+.my-pred-score {
+  font-size: 15px;
+  font-weight: 700;
+  color: $text-primary;
+}
+
+// Friend rows
+.friends-predictions {
+  display: flex;
+  flex-direction: column;
+}
+
+.friend-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-bottom: 1px solid $border;
+  transition: background 0.15s;
+
+  &:last-child { border-bottom: none; }
+  &:hover { background: rgba(26, 29, 40, 0.7); } // ← era $bg-card sólido
+}
+
+.friend-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: #0d0f14;
+  flex-shrink: 0;
+}
+
+.friend-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.friend-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.friend-score {
+  font-size: 13px;
+  font-weight: 700;
+  color: $text-secondary;
+}
+
+// ─── Responsive ───────────────────────────────────────────────
+@media (max-width: 768px) {
+  .tab-content { padding: 14px 12px; }
+  .tabs-bar    { padding: 10px 12px; }
+  .stats-row   { grid-template-columns: repeat(3, 1fr); }
+
+  .historial-card {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .hist-scores {
+    margin-left: 0;
+  }
+
+  .pending-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+.team-crest {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
+  filter: drop-shadow(0 1px 4px rgba(0,0,0,0.4));
+}
+
+// En partidos.html los team-block son más grandes
+.team-block .team-crest {
+  width: 36px;
+  height: 36px;
+}
+
+// En mispredicciones
+.p-crest {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+// ─── Modal ────────────────────────────────────────────────────
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.modal-box {
+  background: #1a1d28;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  width: 90%;
+  max-width: 380px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: #F0F2F8;
+  margin: 0;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  color: #8A90A8;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 4px 8px;
+  &:hover { color: #F0F2F8; }
+}
+
+.modal-teams {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.modal-team {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #F0F2F8;
+  text-align: center;
+  flex: 1;
+}
+
+.modal-crest {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+}
+
+.modal-vs {
+  font-size: 12px;
+  color: #8A90A8;
+  font-weight: 700;
+}
+
+.modal-inputs {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.score-input {
+  width: 64px;
+  height: 56px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+  color: #F0F2F8;
+  background: #13161e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  outline: none;
+  &:focus { border-color: #74ACDF; }
+}
+
+.modal-dash {
+  font-size: 24px;
+  font-weight: 700;
+  color: #8A90A8;
+}
+
+.modal-error {
+  color: #FF6B6B;
+  font-size: 13px;
+  text-align: center;
+  margin: 0;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-cancel {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: transparent;
+  color: #8A90A8;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { background: rgba(255,255,255,0.05); color: #F0F2F8; }
+}
+
+.btn-confirm {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: #74ACDF;
+  color: #0d0f14;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  &:hover { background: #5a95cc; }
+  &:disabled { opacity: 0.5; cursor: not-allowed; }
+}
+
+// ─── Pending card con predicción ─────────────────────────────
+.pending-card.has-pred {
+  border-color: rgba(116, 172, 223, 0.2);
+}
+
+.my-pred-badge {
+  font-size: 12px;
+  color: $accent;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+.locked-badge {
+  font-size: 12px;
+  color: $text-muted;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 8px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+.score-value.no-pred {
+  font-size: 12px;
+  color: $text-muted;
+  font-weight: 500;
+}

@@ -1,0 +1,228 @@
+<div class="predicciones-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title">Mis Predicciones</h1>
+      <span class="page-sub">Mundial 2026 · Tu historial completo</span>
+    </div>
+  </div>
+
+  <!-- Stats Row -->
+  <div class="stats-row">
+    <div class="stat-card accent">
+      <span class="stat-icon">🏆</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ userStats.totalPoints }}</span>
+        <span class="stat-label">Puntos totales</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⭐</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ userStats.exactScores }}</span>
+        <span class="stat-label">Exactos</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">✅</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ userStats.correctResults }}</span>
+        <span class="stat-label">Resultados</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">❌</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ userStats.misses }}</span>
+        <span class="stat-label">Fallados</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🎯</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ accuracy }}%</span>
+        <span class="stat-label">Precisión</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs-bar">
+    <button class="tab-btn" [class.active]="activeTab === 'pendientes'" (click)="setTab('pendientes')">
+      <span>⏳</span> Pendientes
+      <span class="tab-badge">{{ pendingMatches.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'historial'" (click)="setTab('historial')">
+      <span>📋</span> Historial
+      <span class="tab-badge">{{ historial.length }}</span>
+    </button>
+    <button class="tab-btn" [class.active]="activeTab === 'amigos'" (click)="setTab('amigos')">
+      <span>👥</span> Mis amigos
+      <span class="tab-badge">{{ friendsComparison.length }}</span>
+    </button>
+  </div>
+
+  <div class="tab-content">
+
+    <!-- TAB: PENDIENTES -->
+    @if (activeTab === 'pendientes') {
+      <div class="section">
+        @if (loading) {
+          <div class="loading-state">⏳ Cargando partidos...</div>
+        }
+        @if (!loading && pendingMatches.length === 0) {
+          <div class="empty-state"><span>✅</span><p>No tenés partidos pendientes.</p></div>
+        }
+        <div class="pending-list">
+          @for (match of pendingMatches; track match.id) {
+            <div class="pending-card" [class.has-pred]="match.predictedHome !== null">
+              <div class="pending-left">
+                <div class="pending-teams">
+                  <img [src]="match.homeFlag" [alt]="match.homeTeam" class="p-crest" onerror="this.style.display='none'" />
+                  <span class="p-name">{{ match.homeTeam }}</span>
+                  <span class="p-vs">vs</span>
+                  <span class="p-name">{{ match.awayTeam }}</span>
+                  <img [src]="match.awayFlag" [alt]="match.awayTeam" class="p-crest" onerror="this.style.display='none'" />
+                </div>
+                <div class="pending-meta">
+                  <span class="meta-group">{{ match.group }}</span>
+                  <span class="meta-dot">·</span>
+                  <span class="meta-date">{{ match.matchDate }} · {{ match.matchTime }}</span>
+                </div>
+                @if (match.predictedHome !== null) {
+                  <div class="my-pred-badge">
+                    Mi prode: {{ match.predictedHome }} – {{ match.predictedAway }}
+                  </div>
+                }
+              </div>
+              <div class="pending-right">
+                <span class="deadline-badge" [class.urgent]="match.matchDate === 'Hoy'">
+                  ⏰ {{ match.deadline }}
+                </span>
+                @if (match.canEdit) {
+                  <button class="predict-btn" (click)="openModal(match)">
+                    {{ match.predictedHome !== null ? 'Editar' : 'Predecir' }}
+                  </button>
+                } @else {
+                  <span class="locked-badge">🔒 Cerrado</span>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- TAB: HISTORIAL -->
+    @if (activeTab === 'historial') {
+      <div class="section">
+        @if (loading) {
+          <div class="loading-state">⏳ Cargando historial...</div>
+        }
+        @if (!loading && historial.length === 0) {
+          <div class="empty-state"><span>📋</span><p>Todavía no hay partidos finalizados.</p></div>
+        }
+        <div class="historial-list">
+          @for (pred of historial; track pred.matchId) {
+            <div class="historial-card" [ngClass]="pred.status">
+              <div class="hist-left">
+                <div class="hist-status-bar" [ngClass]="pred.status"></div>
+                <div class="hist-info">
+                  <div class="hist-teams">
+                    <img [src]="pred.homeFlag" [alt]="pred.homeTeam" class="p-crest" onerror="this.style.display='none'" />
+                    <span class="p-name">{{ pred.homeTeam }}</span>
+                    <span class="p-vs">vs</span>
+                    <span class="p-name">{{ pred.awayTeam }}</span>
+                    <img [src]="pred.awayFlag" [alt]="pred.awayTeam" class="p-crest" onerror="this.style.display='none'" />
+                  </div>
+                  <div class="hist-meta">
+                    <span class="meta-group">{{ pred.group }}</span>
+                    <span class="meta-dot">·</span>
+                    <span class="meta-date">{{ pred.matchDate }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="hist-scores">
+                <div class="score-block">
+                  <span class="score-label">Mi prode</span>
+                  @if (pred.predictedHome !== null) {
+                    <span class="score-value">{{ pred.predictedHome }} – {{ pred.predictedAway }}</span>
+                  } @else {
+                    <span class="score-value no-pred">Sin prode</span>
+                  }
+                </div>
+                <div class="score-divider"></div>
+                <div class="score-block">
+                  <span class="score-label">Real</span>
+                  <span class="score-value real">{{ pred.actualHome }} – {{ pred.actualAway }}</span>
+                </div>
+              </div>
+
+              <div class="hist-points" [ngClass]="pred.status">
+                {{ getStatusLabel(pred.status) }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- TAB: AMIGOS -->
+    @if (activeTab === 'amigos') {
+      <div class="section">
+        <div class="empty-state">
+          <span>👥</span>
+          <p>La comparación con amigos estará disponible próximamente.</p>
+        </div>
+      </div>
+    }
+
+    <!-- Modal Predicción -->
+    @if (modalOpen && modalMatch) {
+      <div class="modal-overlay" (click)="closeModal()">
+        <div class="modal-box" (click)="$event.stopPropagation()">
+
+          <div class="modal-header">
+            <h2 class="modal-title">
+              {{ modalMatch.predictedHome !== null ? 'Editar predicción' : 'Tu predicción' }}
+            </h2>
+            <button class="modal-close" (click)="closeModal()">✕</button>
+          </div>
+
+          <div class="modal-teams">
+            <div class="modal-team">
+              <img [src]="modalMatch.homeFlag" [alt]="modalMatch.homeTeam" class="modal-crest" onerror="this.style.display='none'" />
+              <span>{{ modalMatch.homeTeam }}</span>
+            </div>
+            <span class="modal-vs">vs</span>
+            <div class="modal-team">
+              <img [src]="modalMatch.awayFlag" [alt]="modalMatch.awayTeam" class="modal-crest" onerror="this.style.display='none'" />
+              <span>{{ modalMatch.awayTeam }}</span>
+            </div>
+          </div>
+
+          <div class="modal-inputs">
+            <input type="number" min="0" max="20" [(ngModel)]="modalHome" class="score-input" />
+            <span class="modal-dash">–</span>
+            <input type="number" min="0" max="20" [(ngModel)]="modalAway" class="score-input" />
+          </div>
+
+          @if (saveError) {
+            <p class="modal-error">{{ saveError }}</p>
+          }
+
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeModal()">Cancelar</button>
+            <button class="btn-confirm" (click)="confirmPrediction()" [disabled]="saving">
+              {{ saving ? 'Guardando...' : 'Confirmar' }}
+            </button>
+          </div>
+
+        </div>
+      </div>
+    }
+
+  </div>
+</div>

@@ -1,0 +1,132 @@
+<div class="partidos-container">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div class="page-title-group">
+      <h1 class="page-title">Fixture Mundial 2026</h1>
+      <span class="page-sub">48 equipos · 104 partidos · USA, Canadá & México</span>
+    </div>
+    <div class="header-badge">
+      <span class="badge-dot"></span>
+      <span>Fase de grupos en curso</span>
+    </div>
+  </div>
+
+  <!-- Phase Tabs -->
+  <div class="phase-tabs">
+    @for (phase of phases; track phase.key) {
+      <button
+        class="phase-tab"
+        [class.active]="activePhase === phase.key"
+        (click)="setPhase(phase.key)"
+      >
+        <span class="phase-icon">{{ phase.icon }}</span>
+        <span class="phase-label">{{ phase.label }}</span>
+      </button>
+    }
+  </div>
+
+  <!-- Loading -->
+  @if (loading) {
+    <div class="loading-state">
+      <span class="loading-spinner">⚽</span>
+      <span>Cargando partidos...</span>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error) {
+    <div class="error-state">⚠️ {{ error }}</div>
+  }
+
+  <!-- FASE DE GRUPOS -->
+  @if (!loading && activePhase === 'grupos') {
+    <div class="grupos-layout">
+
+      <!-- Group selector -->
+      <div class="group-selector">
+        @for (group of groups; track group.letter) {
+          <button
+            class="group-btn"
+            [class.active]="activeGroup === group.letter"
+            (click)="setGroup(group.letter)"
+          >
+            Grupo {{ group.letter }}
+          </button>
+        }
+      </div>
+
+      <!-- Group matches -->
+      @if (activeGroupData) {
+        <div class="group-content">
+          <div class="group-header">
+            <h2 class="group-title">{{ activeGroupData.name }}</h2>
+            <span class="matches-count">{{ activeGroupData.matches.length }} partidos</span>
+          </div>
+
+          <div class="matches-grid">
+            @for (match of activeGroupData.matches; track match.id) {
+              <div class="match-card"
+                [class.live]="getNormalizedStatus(match.status) === 'live'"
+                [class.finished]="getNormalizedStatus(match.status) === 'finished'">
+
+                <div class="match-top">
+                  <span class="match-status" [class]="getNormalizedStatus(match.status)">
+                    @if (getNormalizedStatus(match.status) === 'live') { 🔴 }
+                    {{ getStatusLabel(match.status) }}
+                  </span>
+                  <span class="match-datetime">{{ formatDate(match.date) }} · {{ formatTime(match.date) }}</span>
+                </div>
+
+                <div class="match-body">
+                  <div class="team-block home">
+                    <img [src]="match.home_flag" [alt]="match.home_team" class="team-crest" onerror="this.style.display='none'" />
+                    <span class="team-name">{{ match.home_team }}</span>
+                  </div>
+
+                  <div class="score-center">
+                    @if (getNormalizedStatus(match.status) === 'upcoming') {
+                      <span class="score-vs">VS</span>
+                    } @else {
+                      <span class="score-result">{{ match.home_score }} – {{ match.away_score }}</span>
+                    }
+                  </div>
+
+                  <div class="team-block away">
+                    <img [src]="match.away_flag" [alt]="match.away_team" class="team-crest" onerror="this.style.display='none'" />
+                    <span class="team-name">{{ match.away_team }}</span>
+                  </div>
+                </div>
+
+                <div class="match-footer">
+                  <span class="match-venue">📍 {{ match.city ?? '' }}</span>
+                  <span class="match-stadium">{{ match.stadium ?? '' }}</span>
+                </div>
+
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- FASES ELIMINATORIAS -->
+  @if (!loading && activePhase !== 'grupos') {
+    <div class="knockout-layout">
+      <div class="knockout-header">
+        <h2 class="group-title">
+          @if (activePhase === 'octavos')  { Octavos de Final }
+          @if (activePhase === 'cuartos')  { Cuartos de Final }
+          @if (activePhase === 'semis')    { Semifinales }
+          @if (activePhase === 'final')    { Gran Final }
+        </h2>
+      </div>
+      <div class="empty-state">
+        <span>🔒</span>
+        <p>Esta fase aún no está disponible</p>
+      </div>
+    </div>
+  }
+
+</div>

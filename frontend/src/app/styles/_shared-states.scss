@@ -1,0 +1,40 @@
+// ─── Agregar en partidos.scss, ranking.scss y mispredicciones.scss ────────────
+// Podés crear un archivo _shared.scss e importarlo, o copiar directo en cada uno.
+
+.loading-state,
+.error-state,
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 60px 24px;
+  color: #8A90A8;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  font-size: 14px;
+}
+
+.loading-spinner {
+  font-size: 32px;
+  animation: spin-slow 2s linear infinite;
+}
+
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.error-state {
+  color: #FF6B6B;
+  background: rgba(255, 107, 107, 0.06);
+  border: 1px solid rgba(255, 107, 107, 0.2);
+  border-radius: 12px;
+  margin: 20px 24px;
+  padding: 16px 20px;
+}
+
+.empty-state {
+  span { font-size: 36px; }
+  p    { margin: 0; }
+}

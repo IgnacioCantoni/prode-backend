@@ -1,0 +1,115 @@
+<header class="nb">
+
+  <!-- LOGO -->
+  <a routerLink="/" class="nb-brand">
+    <div class="nb-logo">
+      <img src="img/logo.png" alt="WateN" class="nb-logo-img" />
+    </div>
+    <div class="nb-brand-text">
+      <span class="nb-name">WateN</span>
+      <span class="nb-sub">Team</span>
+    </div>
+  </a>
+
+  <!-- PILL NAV — centrada -->
+  <div class="nb-pill-wrap">
+    <nav class="nb-pill" (mouseleave)="onNavLeave()">
+
+      @if (navPillReady) {
+        <div class="nb-tube"
+             [style.left.px]="navPillLeft"
+             [style.width.px]="navPillWidth">
+          <div class="nb-tube-bar"></div>
+          <div class="nb-tube-glow nb-tube-glow--1"></div>
+          <div class="nb-tube-glow nb-tube-glow--2"></div>
+          <div class="nb-tube-glow nb-tube-glow--3"></div>
+        </div>
+      }
+
+      @for (link of navLinks; track link.path; let i = $index) {
+        <a #navItem
+           [routerLink]="link.path"
+           class="nb-item"
+           [class.nb-item--active]="activeNav === i"
+           (mouseenter)="onNavEnter(i)"
+           (click)="onNavClick(i)">
+          <span class="nb-icon">{{ link.icon }}</span>
+          <span class="nb-label">{{ link.label }}</span>
+        </a>
+      }
+    </nav>
+  </div>
+
+  <!-- AUTH AREA — derecha -->
+  <div class="nb-auth-wrap">
+
+    <!-- Usuario logueado: avatar + nombre + logout -->
+    @if (isLoggedIn) {
+      <div class="nb-user">
+        <div class="nb-user-avatar">{{ userInitials }}</div>
+        <span class="nb-user-name">{{ currentUser?.username }}</span>
+        <button class="nb-btn-logout" (click)="onLogout()">Salir</button>
+      </div>
+    }
+
+    <!-- No logueado: login + register -->
+    @if (!isLoggedIn) {
+      <div class="nb-pill" (mouseleave)="onAuthLeave()">
+
+        @if (authPillReady) {
+          <div class="nb-tube"
+               [style.left.px]="authPillLeft"
+               [style.width.px]="authPillWidth">
+            <div class="nb-tube-bar"></div>
+            <div class="nb-tube-glow nb-tube-glow--1"></div>
+            <div class="nb-tube-glow nb-tube-glow--2"></div>
+            <div class="nb-tube-glow nb-tube-glow--3"></div>
+          </div>
+        }
+
+        <a #authItem routerLink="/login" class="nb-item"
+           (mouseenter)="onAuthEnter(0)" (click)="onAuthClick(0)">
+          <span class="nb-label">Iniciar sesión</span>
+        </a>
+        <a #authItem routerLink="/register" class="nb-item nb-item--solid"
+           (mouseenter)="onAuthEnter(1)" (click)="onAuthClick(1)">
+          <span class="nb-label">Registrarse</span>
+        </a>
+
+      </div>
+    }
+
+  </div>
+
+  <!-- HAMBURGER -->
+  <button class="nb-burger" [class.nb-burger--open]="mobileOpen" (click)="toggleMobile()">
+    <span></span><span></span><span></span>
+  </button>
+
+  <!-- MOBILE MENU -->
+  @if (mobileOpen) {
+    <div class="nb-mobile">
+      @for (link of navLinks; track link.path; let i = $index) {
+        <a [routerLink]="link.path" class="nb-mobile-item"
+           [class.nb-mobile-item--active]="activeNav === i"
+           (click)="onNavClick(i)">
+          <span class="nb-icon">{{ link.icon }}</span>
+          {{ link.label }}
+        </a>
+      }
+      <div class="nb-mobile-auth">
+        @if (isLoggedIn) {
+          <div class="nb-mobile-user">
+            <div class="nb-user-avatar">{{ userInitials }}</div>
+            <span>{{ currentUser?.username }}</span>
+          </div>
+          <button class="nb-btn-logout" (click)="onLogout()">Cerrar sesión</button>
+        } @else {
+          <a routerLink="/login"    class="nb-btn-login">Iniciar sesión</a>
+          <a routerLink="/register" class="nb-btn-reg">Registrarse</a>
+        }
+      </div>
+    </div>
+  }
+
+</header>

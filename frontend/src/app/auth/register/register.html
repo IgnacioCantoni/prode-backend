@@ -1,0 +1,135 @@
+<div class="auth-container">
+  <div class="auth-glow"></div>
+
+  <div class="auth-card">
+
+    <!-- Logo -->
+    <div class="auth-brand">
+      <div class="brand-logo">
+        <img src="img/logo.png" alt="WateN Team logo" class="brand-img" />
+      </div>
+      <div class="brand-text">
+        <span class="brand-name">WateN</span>
+        <span class="brand-sub">Team</span>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="auth-header">
+      <h1 class="auth-title">Crear cuenta</h1>
+      <p class="auth-subtitle">Sumate al prode del Mundial 2026</p>
+    </div>
+
+    <!-- Google button -->
+    <button class="btn-google" type="button" (click)="onGoogleRegister()">
+      <svg class="google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z" fill="#FBBC05"/>
+        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+      </svg>
+      <span>Registrarse con Google</span>
+    </button>
+
+    <!-- Divider -->
+    <div class="auth-divider">
+      <span class="divider-line"></span>
+      <span class="divider-text">o con email</span>
+      <span class="divider-line"></span>
+    </div>
+
+    <!-- Form -->
+    <form class="auth-form" (ngSubmit)="onSubmit()">
+
+      <div class="field-group">
+        <label class="field-label" for="username">Nombre de usuario</label>
+        <div class="field-wrapper">
+          <span class="field-icon">👤</span>
+          <input
+            id="username"
+            type="text"
+            class="field-input"
+            placeholder="tu_nombre"
+            [(ngModel)]="username"
+            name="username"
+            autocomplete="username"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="email">Email</label>
+        <div class="field-wrapper">
+          <span class="field-icon">✉️</span>
+          <input
+            id="email"
+            type="email"
+            class="field-input"
+            placeholder="tu@email.com"
+            [(ngModel)]="email"
+            name="email"
+            autocomplete="email"
+            required
+          />
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="password">Contraseña</label>
+        <div class="field-wrapper">
+          <span class="field-icon">🔒</span>
+          <input
+            id="password"
+            [type]="showPassword ? 'text' : 'password'"
+            class="field-input"
+            placeholder="mínimo 8 caracteres"
+            [(ngModel)]="password"
+            name="password"
+            autocomplete="new-password"
+            required
+          />
+          <button type="button" class="toggle-pw" (click)="showPassword = !showPassword">
+            {{ showPassword ? '🙈' : '👁️' }}
+          </button>
+        </div>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label" for="confirmPassword">Repetir contraseña</label>
+        <div class="field-wrapper" [class.field-error]="!passwordsMatch">
+          <span class="field-icon">🔒</span>
+          <input
+            id="confirmPassword"
+            [type]="showConfirm ? 'text' : 'password'"
+            class="field-input"
+            [class.input-error]="!passwordsMatch"
+            placeholder="repetí tu contraseña"
+            [(ngModel)]="confirmPassword"
+            name="confirmPassword"
+            autocomplete="new-password"
+            required
+          />
+          <button type="button" class="toggle-pw" (click)="showConfirm = !showConfirm">
+            {{ showConfirm ? '🙈' : '👁️' }}
+          </button>
+        </div>
+        @if (!passwordsMatch) {
+          <span class="field-hint error">Las contraseñas no coinciden</span>
+        }
+      </div>
+
+      <button type="submit" class="btn-submit" [disabled]="!passwordsMatch">
+        Crear cuenta
+      </button>
+
+    </form>
+
+    <!-- Footer -->
+    <p class="auth-footer">
+      ¿Ya tenés cuenta?
+      <a routerLink="/login" class="auth-link">Iniciá sesión</a>
+    </p>
+
+  </div>
+</div>

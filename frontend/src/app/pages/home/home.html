@@ -1,0 +1,162 @@
+@if (true) {
+<div class="home-container">
+
+  <!-- HERO -->
+  <section class="hero-section" @fadeSlideIn>
+    <div class="hero-glow"></div>
+    <div class="hero-content">
+      <div class="tournament-badge">
+        <span class="badge-dot"></span>
+        <span>FIFA World Cup 2026</span>
+      </div>
+      <div class="hero-main">
+        <div class="user-greeting">
+          <div class="avatar avatar--animate">{{ userStats.avatar }}</div>
+          <div class="greeting-text">
+            <span class="greeting-sub">Bienvenido de vuelta</span>
+            <h1 class="greeting-name">{{ userStats.username }}</h1>
+          </div>
+        </div>
+        <div class="hero-flag">
+          <span class="flag-emoji">🇦🇷</span>
+          <span class="flag-label">Argentina</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS ROW -->
+  <section class="stats-row">
+    <div class="stat-card accent" @statBounceIn>
+      <span class="stat-icon">🏆</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ animatedPoints }}</span>
+        <span class="stat-label">Puntos totales</span>
+      </div>
+    </div>
+    <div class="stat-card stat-delay-1" @fadeSlideIn>
+      <span class="stat-icon">📊</span>
+      <div class="stat-info">
+        <span class="stat-value">#{{ animatedRank }}</span>
+        <span class="stat-label">Posición ranking</span>
+      </div>
+    </div>
+    <div class="stat-card stat-delay-2" @fadeSlideIn>
+      <span class="stat-icon">🎯</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ animatedAccuracy }}%</span>
+        <span class="stat-label">Precisión</span>
+      </div>
+    </div>
+    <div class="stat-card stat-delay-3" @fadeSlideIn>
+      <span class="stat-icon">⭐</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ animatedExact }}</span>
+        <span class="stat-label">Marcadores exactos</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MAIN GRID -->
+  <div class="main-grid">
+
+    <!-- Próximos Partidos -->
+    <section class="section-card" @fadeSlideIn>
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2 class="section-title">Próximos partidos</h2>
+          <span class="section-count">{{ upcomingMatches.length }} partidos</span>
+        </div>
+        <a routerLink="/partidos" class="see-all-btn">Ver todos →</a>
+      </div>
+
+      @if (loading) {
+        <div class="loading-inline">Cargando partidos...</div>
+      }
+
+      <div class="matches-list" @staggerList>
+        @for (match of upcomingMatches; track match.id) {
+          <div class="match-card">
+            <div class="match-meta">
+              <span class="match-group">{{ match.group ?? '' }}</span>
+              <span class="match-date">{{ formatDate(match.date) }}</span>
+            </div>
+            <div class="match-teams">
+              <div class="team home">
+                <img [src]="match.home_flag" [alt]="match.home_team" class="team-crest" onerror="this.style.display='none'" />
+                <span class="team-name">{{ match.home_team }}</span>
+              </div>
+              <div class="match-score-box">
+                <span class="vs-time">{{ formatTime(match.date) }}</span>
+                <span class="vs-separator">VS</span>
+              </div>
+              <div class="team away">
+                <img [src]="match.away_flag" [alt]="match.away_team" class="team-crest" onerror="this.style.display='none'" />
+                <span class="team-name">{{ match.away_team }}</span>
+              </div>
+            </div>
+            <div class="match-footer">
+              <span class="stadium-name">📍 {{ match.stadium ?? '' }}</span>
+              <a routerLink="/partidos" class="predict-btn">Predecir</a>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Mis Predicciones -->
+    <section class="section-card section-card--delay" @fadeSlideIn>
+      <div class="section-header">
+        <div class="section-title-group">
+          <h2 class="section-title">Mis predicciones</h2>
+          <span class="section-count">Recientes</span>
+        </div>
+        <a routerLink="/mispredicciones" class="see-all-btn">Ver todas →</a>
+      </div>
+
+      <div class="predictions-list" @staggerList>
+        @for (pred of recentPredictions; track pred.id) {
+          <div class="prediction-card">
+            <span class="pred-date">Partido #{{ pred.match_id }}</span>
+            <div class="pred-match">
+              <div class="pred-score-display">
+                <span class="pred-num">{{ pred.home_score }}</span>
+                <span class="pred-dash">–</span>
+                <span class="pred-num">{{ pred.away_score }}</span>
+              </div>
+            </div>
+            <div class="pred-points" [ngClass]="getPointsClass(pred.points_earned)">
+              {{ getPointsLabel(pred.points_earned) }}
+            </div>
+          </div>
+        }
+
+        @if (recentPredictions.length === 0 && !loading) {
+          <div class="empty-preds">Todavía no cargaste predicciones.</div>
+        }
+      </div>
+
+      <div class="accuracy-bar-section">
+        <div class="accuracy-labels">
+          <span>Precisión global</span>
+          <span class="accuracy-value">{{ accuracy }}%</span>
+        </div>
+        <div class="accuracy-track">
+          <div class="accuracy-fill" [style.width.%]="accuracy"></div>
+        </div>
+        <div class="accuracy-legend">
+          <span class="legend-item">
+            <span class="legend-dot exact-dot"></span>
+            Exactos ({{ userStats.exactScores }})
+          </span>
+          <span class="legend-item">
+            <span class="legend-dot correct-dot"></span>
+            Resultado ({{ userStats.correctResults - userStats.exactScores }})
+          </span>
+        </div>
+      </div>
+    </section>
+
+  </div>
+</div>
+}

@@ -1,0 +1,421 @@
+// ─── Variables (same as home) ────────────────────────────────
+$bg-base:       #0d0f14;
+$bg-surface:    #13161e;
+$bg-card:       #1a1d28;
+$bg-card-hover: #1f2335;
+$border:        rgba(255, 255, 255, 0.07);
+$border-light:  rgba(255, 255, 255, 0.12);
+
+$accent:        #74ACDF;
+$accent-glow:   rgba(116, 172, 223, 0.15);
+$gold:          #F6B40E;
+$gold-glow:     rgba(246, 180, 14, 0.12);
+
+$text-primary:  #F0F2F8;
+$text-secondary:#8A90A8;
+$text-muted:    #4A5068;
+
+$green:         #3DDC84;
+$green-bg:      rgba(61, 220, 132, 0.1);
+$yellow:        #FFD166;
+$yellow-bg:     rgba(255, 209, 102, 0.1);
+$red:           #FF6B6B;
+$red-bg:        rgba(255, 107, 107, 0.1);
+$blue-bg:       rgba(116, 172, 223, 0.1);
+
+$radius-sm:     8px;
+$radius-md:     12px;
+$radius-lg:     16px;
+$radius-xl:     20px;
+
+// ─── Base ─────────────────────────────────────────────────────
+.reglas-container {
+  background: transparent; // ← era $bg-base
+  min-height: 100vh;
+  color: $text-primary;
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  padding-bottom: 3rem;
+}
+
+// ─── Hero ─────────────────────────────────────────────────────
+.hero-section {
+  position: relative;
+  padding: 20px 24px 24px;
+  overflow: hidden;
+  border-bottom: 1px solid $border;
+  background: rgba(19, 22, 30, 0.6); // ← era $bg-surface
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, $accent, #fff, $accent);
+  }
+}
+
+.hero-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 20% 50%, rgba(116, 172, 223, 0.07) 0%, transparent 60%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+}
+
+.tournament-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  background: rgba(116, 172, 223, 0.1);
+  border: 1px solid rgba(116, 172, 223, 0.25);
+  border-radius: 100px;
+  padding: 3px 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: $accent;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+
+.badge-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: $accent;
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.4; transform: scale(0.7); }
+}
+
+.hero-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: $text-primary;
+  margin: 0 0 6px;
+  letter-spacing: -0.03em;
+}
+
+.hero-subtitle {
+  font-size: 13px;
+  color: $text-secondary;
+  margin: 0;
+}
+
+// ─── Grid Layout ──────────────────────────────────────────────
+.reglas-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 14px 16px;
+}
+
+// ─── Section Card ─────────────────────────────────────────────
+.section-card {
+  background: rgba(19, 22, 30, 0.65); // ← era $bg-surface
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid $border;
+  border-radius: $radius-xl;
+  padding: 18px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+
+.section-icon {
+  font-size: 20px;
+  line-height: 1;
+}
+
+.section-title {
+  font-size: 15px;
+  font-weight: 600;
+  color: $text-primary;
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+.section-desc {
+  font-size: 13px;
+  color: $text-secondary;
+  line-height: 1.6;
+  margin: 0 0 14px;
+}
+
+// ─── Banners ──────────────────────────────────────────────────
+.info-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: $blue-bg;
+  border: 1px solid rgba(116, 172, 223, 0.2);
+  border-left: 3px solid $accent;
+  border-radius: $radius-md;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: $text-secondary;
+  line-height: 1.5;
+
+  strong { color: $text-primary; }
+}
+
+.info-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+.warning-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: $yellow-bg;
+  border: 1px solid rgba(255, 209, 102, 0.2);
+  border-left: 3px solid $yellow;
+  border-radius: $radius-md;
+  padding: 11px 14px;
+  font-size: 13px;
+  color: $text-secondary;
+  line-height: 1.5;
+  margin-top: 14px;
+
+  strong { color: $yellow; }
+}
+
+.warning-icon { font-size: 15px; flex-shrink: 0; margin-top: 1px; }
+
+// ─── Points Table ─────────────────────────────────────────────
+.points-table {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.points-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 13px;
+  border-radius: $radius-md;
+  border: 1px solid $border;
+  background: rgba(26, 29, 40, 0.7); // ← era $bg-card
+  transition: background 0.2s;
+
+  &:hover { background: rgba(31, 35, 53, 0.8); } // ← era $bg-card-hover
+
+  &.header-row {
+    background: transparent;
+    border: none;
+    padding: 2px 13px 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    pointer-events: none;
+  }
+
+  &.exact         { border-color: rgba(61, 220, 132, 0.15); }
+  &.correct-diff  { border-color: rgba(116, 172, 223, 0.15); }
+  &.draw          { border-color: rgba(116, 172, 223, 0.15); }
+  &.correct       { border-color: rgba(255, 209, 102, 0.15); }
+  &.partial       { border-color: rgba(255, 255, 255, 0.06); }
+  &.miss          { border-color: rgba(255, 107, 107, 0.12); }
+}
+
+.row-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+}
+
+.row-emoji { font-size: 18px; line-height: 1; flex-shrink: 0; }
+
+.row-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.row-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: $text-primary;
+}
+
+.row-example {
+  font-size: 11px;
+  color: $text-muted;
+}
+
+// ─── Points Badges ────────────────────────────────────────────
+.points-badge {
+  font-size: 12px;
+  font-weight: 700;
+  padding: 4px 11px;
+  border-radius: 100px;
+  white-space: nowrap;
+  flex-shrink: 0;
+
+  &.exact-badge        { background: $green-bg;  color: $green;  border: 1px solid rgba(61, 220, 132, 0.3); }
+  &.correct-diff-badge { background: $blue-bg;   color: $accent; border: 1px solid rgba(116, 172, 223, 0.3); }
+  &.draw-badge         { background: $blue-bg;   color: $accent; border: 1px solid rgba(116, 172, 223, 0.3); }
+  &.correct-badge      { background: $yellow-bg; color: $yellow; border: 1px solid rgba(255, 209, 102, 0.3); }
+  &.partial-badge      { background: rgba(255, 255, 255, 0.05); color: $text-secondary; border: 1px solid $border; }
+  &.miss-badge         { background: $red-bg;    color: $red;    border: 1px solid rgba(255, 107, 107, 0.25); }
+}
+
+// ─── Bonus Card ───────────────────────────────────────────────
+.bonus-card {
+  border-color: rgba(116, 172, 223, 0.18);
+  background: rgba(116, 172, 223, 0.03);
+}
+
+.bonus-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(26, 29, 40, 0.7); // ← era $bg-card
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 13px 15px;
+}
+
+.bonus-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.bonus-emoji { font-size: 20px; line-height: 1; }
+
+.bonus-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.bonus-points {
+  font-size: 15px;
+  font-weight: 700;
+  color: $green;
+  background: $green-bg;
+  border: 1px solid rgba(61, 220, 132, 0.25);
+  padding: 5px 13px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+// ─── Podio Card ───────────────────────────────────────────────
+.podio-card {
+  border-color: rgba(246, 180, 14, 0.15);
+  background: rgba(246, 180, 14, 0.02);
+}
+
+.podio-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.podio-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(26, 29, 40, 0.7); // ← era $bg-card
+  border: 1px solid $border;
+  border-radius: $radius-lg;
+  padding: 12px 15px;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(31, 35, 53, 0.8); } // ← era $bg-card-hover
+
+  &.gold   { border-color: rgba(246, 180, 14, 0.25);  .podio-pts { color: $gold; } }
+  &.silver { border-color: rgba(200, 200, 215, 0.15); .podio-pts { color: #C8C8D7; } }
+  &.bronze { border-color: rgba(200, 140, 80, 0.15);  .podio-pts { color: #C88C50; } }
+}
+
+.podio-medal { font-size: 22px; line-height: 1; }
+
+.podio-label {
+  flex: 1;
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.podio-pts {
+  font-size: 14px;
+  font-weight: 700;
+}
+
+// ─── Tiebreak Card ────────────────────────────────────────────
+.tiebreak-card {
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+.tiebreak-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.tiebreak-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 13px;
+  background: rgba(26, 29, 40, 0.7); // ← era $bg-card
+  border: 1px solid $border;
+  border-radius: $radius-md;
+  transition: background 0.2s;
+
+  &:hover { background: rgba(31, 35, 53, 0.8); } // ← era $bg-card-hover
+}
+
+.tiebreak-num {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: rgba(116, 172, 223, 0.12);
+  border: 1px solid rgba(116, 172, 223, 0.25);
+  color: $accent;
+  font-size: 12px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.tiebreak-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.tiebreak-title {
+  font-size: 13px;
+  font-weight: 500;
+  color: $text-primary;
+}
+
+.tiebreak-sub {
+  font-size: 11px;
+  color: $text-muted;
+}
