@@ -33,7 +33,7 @@ router.post('/login', async (req, res): Promise<any> => {
     res.cookie('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // solo HTTPS en prod
-      sameSite: 'lax',  // protección CSRF básica
+      sameSite: 'none',  // protección CSRF básica
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 días en ms
     });
 
@@ -49,7 +49,7 @@ router.post('/logout', (_req, res) => {
   res.clearCookie('auth_token', {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    sameSite: 'none',
   });
   res.json({ message: 'Sesión cerrada correctamente.' });
 });
