@@ -1,6 +1,7 @@
 import axios from 'axios';
 import pool from '../config/database';
 import { teamMap } from '../utils/team-map';
+import { calculatePointsForMatch } from './points.service'; // 🔥 IMPORTAMOS EL SERVICIO DE PUNTOS
 
 const API_KEY = process.env.SPORTS_API_KEY;
 const API_URL = 'https://api.football-data.org/v4';
@@ -24,11 +25,17 @@ export const syncLiveScores = async () => {
         SET home_score = $1, away_score = $2, status = $3
         WHERE id = $4;
       `, [m.score.fullTime.home, m.score.fullTime.away, 'IN_PLAY', m.id.toString()]);
+
+      // 🔥 MAGIA EN TIEMPO REAL: Calculamos puntos inmediatamente después de actualizar el resultado en vivo
+      if (m.score?.fullTime?.home !== null && m.score?.fullTime?.home !== undefined) {
+        await calculatePointsForMatch(m.id.toString());
+      }
     }
   } catch (error) {
     console.error('Error en syncLiveScores:', error);
   }
 };
+
 /**
  * Sincroniza los equipos usando SQL puro y el mapeo de IDs
  */
@@ -57,7 +64,6 @@ export const syncTeams = async () => {
 // Función auxiliar para procesar y vincular grupos
 const processGroupInfo = async (matchData: any, homeTeamId: string, awayTeamId: string) => {
   // 1. Filtramos: Solo nos importan los partidos de fase de grupos
-  // En la API de football-data suele venir como "GROUP_STAGE" y el grupo como "GROUP A"
   if (matchData.stage !== 'GROUP_STAGE' || !matchData.group) return;
 
   // Limpiamos el texto para que en la DB guarde "A" en lugar de "GROUP A"
@@ -80,10 +86,8 @@ const processGroupInfo = async (matchData: any, homeTeamId: string, awayTeamId: 
   groupId = gRes.rows[0].id;
 
   // 4. Vinculamos los equipos al grupo
-  // Usamos ON CONFLICT DO NOTHING porque la PRIMARY KEY de group_teams evita que un equipo se anote dos veces en el mismo grupo
   const insertGroupTeamQuery = 
-    "INSERT INTO group_teams (group_id, team_id)VALUES ($1, $2)ON CONFLICT (group_id, team_id) DO NOTHING";
-  ;
+    "INSERT INTO group_teams (group_id, team_id) VALUES ($1, $2) ON CONFLICT (group_id, team_id) DO NOTHING";
 
   await pool.query(insertGroupTeamQuery, [groupId, homeTeamId]);
   await pool.query(insertGroupTeamQuery, [groupId, awayTeamId]);
@@ -134,6 +138,11 @@ export const syncMatches = async () => {
         m.score?.fullTime?.home ?? null,
         m.score?.fullTime?.away ?? null
       ]);
+
+      // 🔥 MAGIA EN TIEMPO REAL: Solo calculamos puntos si ya hay goles reportados
+      if (m.score?.fullTime?.home !== null && m.score?.fullTime?.home !== undefined) {
+        await calculatePointsForMatch(m.id.toString());
+      }
     }
     console.log('✅ Partidos sincronizados correctamente.');
   } catch (error) {

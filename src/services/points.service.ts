@@ -1,23 +1,26 @@
 import pool from '../config/database';
-import { calculateMatchPoints } from '../utils/scoring.utils'; // Importamos tu lógica
+import { calculateMatchPoints } from '../utils/scoring.utils';
 import { MatchScore } from '../models/prode.model';
 
-export const calculatePointsForMatch = async (matchId: string) => { 
-  // 1. Traer el resultado real del partido
+export const calculatePointsForMatch = async (matchId: string | number) => { 
+  // 1. Traer el resultado real del partido 
   const matchRes = await pool.query(
-    'SELECT home_score, away_score, stage FROM matches WHERE id = $1 AND status = $2', 
-    [matchId, 'FINISHED']
+    `SELECT home_score, away_score, stage, status 
+     FROM matches 
+     WHERE id = $1 
+     AND home_score IS NOT NULL 
+     AND away_score IS NOT NULL`, 
+    [matchId]
   );
-  
   
   if (matchRes.rows.length === 0) return;
   const realResult = matchRes.rows[0];
 
   // 2. Traer todas las predicciones de los usuarios para este partido
   const predsRes = await pool.query(
-  'SELECT id, home_score, away_score, qualifier_pick FROM match_predictions WHERE match_id = $1',
-  [matchId]
-);
+    'SELECT id, home_score, away_score, qualifier_pick FROM match_predictions WHERE match_id = $1',
+    [matchId]
+  );
 
   // 3. Procesar cada predicción usando tu función de utilidad
   for (const pred of predsRes.rows) {
@@ -28,13 +31,14 @@ export const calculatePointsForMatch = async (matchId: string) => {
 
     // Determinamos si es fase de eliminatoria (Knockout)
     const isKnockout = realResult.stage !== 'GROUP';
+    
     const points = calculateMatchPoints(prediction, result, { 
-    isKnockout,
-    actualQualifier: realResult.qualifier, 
-    predictedQualifier: pred.qualifier_pick 
+      isKnockout,
+      // Usamos nulo temporalmente si tu tabla de matches aún no tiene columna qualifier
+      actualQualifier: realResult.qualifier || null, 
+      predictedQualifier: pred.qualifier_pick 
     });
     
-
     // 4. Guardar los puntos calculados en la DB
     await pool.query(
       'UPDATE match_predictions SET points_earned = $1 WHERE id = $2',
@@ -42,5 +46,5 @@ export const calculatePointsForMatch = async (matchId: string) => {
     );
   }
   
-  console.log(`✅ Puntos calculados para el partido ${matchId}`);
+  console.log(`🎯 Puntos calculados y actualizados para el partido ${matchId}`);
 };
