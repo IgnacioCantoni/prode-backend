@@ -15,18 +15,11 @@ const COMPETITION_ID = 'WC';
 
 export const syncLiveScores = async () => {
   try {
-    // 1. Calculamos la fecha de hoy en formato YYYY-MM-DD
-    const today = new Date().toISOString().split('T')[0];
+    
+    // 1. Pedimos TODO el fixture de la Copa del Mundo (sin ningún parámetro extra)
+    const response = await apiClient.get(`/competitions/${COMPETITION_ID}/matches`);
 
-    // 2. Pedimos todos los partidos de hoy (esto sí está permitido en el plan gratis)
-    const response = await apiClient.get(`/competitions/${COMPETITION_ID}/matches`, {
-      params: { 
-        dateFrom: today,
-        dateTo: today
-      }
-    });
-
-    // 3. Filtramos nosotros mismos cuáles están en vivo o en el entretiempo
+    // 2. Filtramos nosotros mismos los que están en vivo
     const liveMatches = response.data.matches.filter(
       (m: any) => m.status === 'IN_PLAY' || m.status === 'PAUSED'
     );

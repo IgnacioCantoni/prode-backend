@@ -3,33 +3,29 @@ import { syncTeams, syncMatches } from '../services/sports-api.service';
 
 export const initCronJobs = () => {
   
-  //  Sincronización de Partidos (Goles, tiempos, estados "En Vivo")
-  // Corre cada 1 minuto (* * * * *) para mantener el Prode actualizado en tiempo real.
-  cron.schedule('* * * * *', async () => {
-    console.log(`⏱️ [${new Date().toISOString()}] [CRON - Partidos] Iniciando sincronización en vivo...`);
+  // ⏱️ CRON 1: Sincronización de Partidos 
+  // Corre cada 5 minutos (*/5 * * * *) trayendo todo y filtrando en nuestro back.
+  cron.schedule('*/5 * * * *', async () => {
+    console.log(`⏱️ [${new Date().toISOString()}] [CRON - Partidos] Buscando actualizaciones...`);
     
     try {
       await syncMatches();
-      console.log(`✅ [${new Date().toISOString()}] [CRON - Partidos] Actualización en vivo completada.`);
+      console.log(`✅ [${new Date().toISOString()}] [CRON - Partidos] Actualización completada.`);
     } catch (error) {
-      console.error(`❌ [${new Date().toISOString()}] [CRON - Partidos] Error al actualizar en vivo:`, error);
+      console.error(`❌ [${new Date().toISOString()}] [CRON - Partidos] Error:`, error);
     }
   });
 
-  //  Sincronización de Equipos (Nombres, banderas, grupos)
-  // Corre TODOS los días a las 03:00 AM (0 3 * * *) para evitar llamados innecesarios a la API.
+  // 📅 CRON 2: Sincronización de Equipos
+  // Sigue corriendo a las 03:00 AM todos los días.
   cron.schedule('0 3 * * *', async () => {
-    console.log(`📅 [${new Date().toISOString()}] [CRON - Equipos] Iniciando mantenimiento diario de países...`);
+    console.log(`📅 [${new Date().toISOString()}] [CRON - Equipos] Mantenimiento de países...`);
     
     try {
       await syncTeams();
-      console.log(`✅ [${new Date().toISOString()}] [CRON - Equipos] Base de datos de equipos sincronizada con éxito.`);
+      console.log(`✅ [${new Date().toISOString()}] [CRON - Equipos] Completado.`);
     } catch (error) {
-      console.error(`❌ [${new Date().toISOString()}] [CRON - Equipos] Error en mantenimiento diario:`, error);
+      console.error(`❌ [${new Date().toISOString()}] [CRON - Equipos] Error:`, error);
     }
   });
-  
-  console.log('✅ Sistema de Cron Jobs configurado correctamente:');
-  console.log('   -> Partidos: cada 1 minuto.');
-  console.log('   -> Equipos: todos los días a las 3:00 AM.');
 };
