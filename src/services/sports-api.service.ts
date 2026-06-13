@@ -15,11 +15,23 @@ const COMPETITION_ID = 'WC';
 
 export const syncLiveScores = async () => {
   try {
+    // 1. Calculamos la fecha de hoy en formato YYYY-MM-DD
+    const today = new Date().toISOString().split('T')[0];
+
+    // 2. Pedimos todos los partidos de hoy (esto sí está permitido en el plan gratis)
     const response = await apiClient.get(`/competitions/${COMPETITION_ID}/matches`, {
-      params: { status: 'IN_PLAY' }
+      params: { 
+        dateFrom: today,
+        dateTo: today
+      }
     });
+
+    // 3. Filtramos nosotros mismos cuáles están en vivo o en el entretiempo
+    const liveMatches = response.data.matches.filter(
+      (m: any) => m.status === 'IN_PLAY' || m.status === 'PAUSED'
+    );
     
-    for (const m of response.data.matches) {
+    for (const m of liveMatches) {
       await pool.query(`
         UPDATE matches 
         SET home_score = $1, away_score = $2, status = $3
