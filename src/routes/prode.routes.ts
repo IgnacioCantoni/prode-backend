@@ -85,14 +85,6 @@ router.post('/sync', async (req, res) => {
 
 router.get('/matches', async (req, res) => {
   try {
-    const liveMatch = await pool.query("SELECT id FROM matches WHERE status = 'IN_PLAY'");
-
-    if (liveMatch.rows.length > 0) {
-      await syncLiveScores();
-      for (const match of liveMatch.rows) {
-        await calculatePointsForMatch(match.id);
-      }
-    }
 
     // JOIN con teams para traer nombre completo y logo (bandera) de cada equipo
     const result = await pool.query(`

@@ -1,5 +1,7 @@
 import cron from 'node-cron';
 import { syncTeams, syncMatches } from '../services/sports-api.service';
+import { calculatePointsForMatch } from '../services/points.service'; // ✅ Importamos el servicio de puntos
+import pool from '../config/database'; // ✅ Importamos la base de datos
 
 export const initCronJobs = () => {
   
@@ -9,8 +11,19 @@ export const initCronJobs = () => {
     console.log(`⏱️ [${new Date().toISOString()}] [CRON - Partidos] Buscando actualizaciones...`);
     
     try {
+      // 1. Buscamos el fixture en la API externa y actualizamos la DB
       await syncMatches();
-      console.log(`✅ [${new Date().toISOString()}] [CRON - Partidos] Actualización completada.`);
+      
+      // 2. Revisamos si hay partidos en juego para actualizar los puntos de los usuarios
+      const liveMatch = await pool.query("SELECT id FROM matches WHERE status = 'IN_PLAY' OR status = 'FINISHED'");
+      
+      if (liveMatch.rows.length > 0) {
+        for (const match of liveMatch.rows) {
+          await calculatePointsForMatch(match.id);
+        }
+      }
+
+      console.log(`✅ [${new Date().toISOString()}] [CRON - Partidos] Actualización y puntos completados.`);
     } catch (error) {
       console.error(`❌ [${new Date().toISOString()}] [CRON - Partidos] Error:`, error);
     }
